@@ -1,12 +1,10 @@
-import './animation.css'
-import { useState } from 'react';
 export default function SearchBar({ name, setName, onSearch }) {
   return (
     <div className="flex items-center justify-center p-2">
         <div>
             <input
             type="text"
-            placeholder="Nome Anime..."
+            placeholder="Anime name..."
             value={name}
             onChange={(e) => setName(e.target.value)}
             className="ml-auto mr-2 bg-slate-300 rounded-full w-[150px] h-[40px] placeholder:text-sm focus:outline-0 pl-3"

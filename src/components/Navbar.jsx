@@ -1,17 +1,24 @@
 import { useEffect, useState } from "react"
 import "../../style.css"
 function NavBar(){
-    const [film , setFilm] = useState("")
+    const [name , setName] = useState("")
+    const [anime,setAnime] = useState([])
 
-    async function handleClick(){
-       fetch('https://api.jikan.moe/v4/anime?type=movie')
-        .then(response => response.json())
-        .then(data => {
-            console.log(data.data[0].mal_id);
-        })
-        .catch(error => {
-            console.log(error);
-        });
+    function handleClick(){
+        if(name){
+            fetch(`https://api.jikan.moe/v4/anime?type=tv&q=${name}`)
+            .then(response => response.json())
+            .then(data => {
+                const json = data.data.filter((obj)=> obj.title_english !== null && obj.title_english.toLowerCase().replace(" ","") === name.toLowerCase().replace(" ",""))
+                setAnime(json)
+                setName("")
+                console.log(anime);
+            })
+            .catch(error => {
+                console.log(error);
+            });
+        }
+       
     }
 
     return(
@@ -22,10 +29,10 @@ function NavBar(){
                 </h1>
                 <input 
                 type="text"
-                placeholder="Nome film..."
-                value={film}
-                onChange={(e)=>setFilm(e.target.value)}
-                className=" mr-2 bg-white rounded-full w-[150px] h-[40px] placeholder:text-sm focus:outline-0  pl-3" 
+                placeholder="Nome Anime..."
+                value={name}
+                onChange={(e)=>setName(e.target.value)}
+                className=" ml-auto mr-2 bg-white rounded-full w-[150px] h-[40px] placeholder:text-sm focus:outline-0  pl-3" 
                 />
                 <button
                 onClick={()=>handleClick()} 
@@ -33,10 +40,16 @@ function NavBar(){
                     search
                 </button>
             </nav>
-            <div>
-                {film ?(
+            <div className=" p-4 bg-amber-500">
+                {anime.length>=1 ?(
                         <>  
-                            <div>{film.adult}</div>
+                            <div className=" grid grid-flow-row grid-cols-1">
+                                <h2 
+                                className=" text-center text-black p-3">
+                                    {anime[0].title_english}
+                                </h2>
+                                <img src={anime[0].images.jpg.image_url} alt="immagine anime" />
+                            </div>
                         </>
                     ):(
                         <>
